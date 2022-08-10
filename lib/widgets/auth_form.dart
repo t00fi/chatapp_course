@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chatapp_course/pickers/user_image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +23,32 @@ class _AuthFormState extends State<AuthForm> {
   String _userEmail = '';
   String _userPassword = '';
   String _userName = '';
+  File? _userImage;
 //to check we are in which mode.
 //update button and ui with is.
   bool isLogin = true;
+
+  //method to assign image file in _userImage var
+  void _pickedImage(File image) {
+    _userImage = image;
+  }
+
   //submit method
   void _trySubmit() {
     final isValid = _formKey.currentState!.validate();
     //take all focus out from all inputs and close keyboard.
     FocusScope.of(context).unfocus();
+    //check if no image uploaded return snackbar
+    if (_userImage == null && !isLogin) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please pick an image'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
     if (!isValid) {
       return;
     }
@@ -36,8 +56,8 @@ class _AuthFormState extends State<AuthForm> {
     _formKey.currentState!.save();
     //call the widget method which gives value to the parameters in authScreen() widget.
     //.trim() to avoid spaces at nd or other places.
-    widget.submitAuth(
-        _userEmail.trim(), _userPassword.trim(), _userName.trim(), isLogin);
+    widget.submitAuth(_userEmail.trim(), _userPassword.trim(), _userName.trim(),
+        _userImage, isLogin);
   }
 
   @override
@@ -57,7 +77,9 @@ class _AuthFormState extends State<AuthForm> {
                   //if we not login then we can pick an image for signup
                   if (!isLogin)
                     //image picker widget
-                    const UserImagePicker(),
+                    UserImagePicker(
+                      assignedPicture: _pickedImage,
+                    ),
                   TextFormField(
                     key: const ValueKey('email'),
                     keyboardType: TextInputType.emailAddress,

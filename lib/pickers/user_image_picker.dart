@@ -3,8 +3,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({Key? key}) : super(key: key);
-
+  const UserImagePicker({Key? key, required this.assignedPicture})
+      : super(key: key);
+  final Function assignedPicture;
   @override
   State<UserImagePicker> createState() => _UserImagePickerState();
 }
@@ -20,6 +21,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
     setState(() {
       _pickedImage = pickedImageFile;
     });
+    //give the value of paramaeter
+    //function is created in authForm widget.
+    widget.assignedPicture(File(pickedImageFile!.path));
   }
 
   @override

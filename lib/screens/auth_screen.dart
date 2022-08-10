@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:chatapp_course/widgets/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,8 +22,8 @@ class _AuthScreenState extends State<AuthScreen> {
   //pass is to authForm() widget because button are there.
   bool _isLoading = false;
   //this method will pass to the AuthForm Widget to get its paramaeters value.
-  Future<void> _submitAuthForm(
-      String email, String password, String username, bool isLogin) async {
+  Future<void> _submitAuthForm(String email, String password, String username,
+      File image, bool isLogin) async {
     UserCredential userCredential;
     try {
       setState(() {
@@ -33,6 +36,18 @@ class _AuthScreenState extends State<AuthScreen> {
         //create user
         userCredential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
+
+        ///upload image to storage firebase.
+        ///1-we allowed create in storage rules
+        ///2 it will auto creat folder with the name : user_images.
+        ///3-each image name will be uid.jpg
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child('${userCredential.user!.uid}.jpg');
+
+        ///then put the file.
+        await ref.putFile(image);
         //adding username and email tp collection
         await FirebaseFirestore.instance
             .collection('users')
