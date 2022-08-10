@@ -1,3 +1,4 @@
+import 'package:chatapp_course/pickers/user_image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,17 +54,10 @@ class _AuthFormState extends State<AuthForm> {
                 //take the height as much as needed(its children)
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  //adding user picture in login form
-                  CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    radius: 40,
-                  ),
-                  //button to take a photo
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.image),
-                    label: const Text('Add image'),
-                  ),
+                  //if we not login then we can pick an image for signup
+                  if (!isLogin)
+                    //image picker widget
+                    const UserImagePicker(),
                   TextFormField(
                     key: const ValueKey('email'),
                     keyboardType: TextInputType.emailAddress,
