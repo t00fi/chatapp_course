@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 ///this widget is designed bubble message which will be called in message.dart file to look chant more interesting.
 class MessageBubble extends StatelessWidget {
-  const MessageBubble({Key? key, required this.sentMessage, required this.isMe})
+  const MessageBubble(
+      {Key? key,
+      required this.sentMessage,
+      required this.username,
+      required this.isMe})
       : super(key: key);
   final String sentMessage;
+  final String username;
   final bool isMe;
   @override
   Widget build(BuildContext context) {
@@ -28,11 +33,24 @@ class MessageBubble extends StatelessWidget {
                   isMe ? const Radius.circular(0) : const Radius.circular(12),
             ),
           ),
-          child: Text(
-            sentMessage,
-            style: TextStyle(
-              color: isMe ? Colors.black : Colors.white,
-            ),
+          child: Column(
+            crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Text(
+                username,
+                style: TextStyle(
+                  color: isMe ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                sentMessage,
+                style: TextStyle(
+                  color: isMe ? Colors.black : Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ],

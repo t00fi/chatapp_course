@@ -8,7 +8,7 @@ class AuthForm extends StatefulWidget {
   final Function submitAuth;
   final bool isloading;
   @override
-  _AuthFormState createState() => _AuthFormState();
+  State<AuthForm> createState() => _AuthFormState();
 }
 
 class _AuthFormState extends State<AuthForm> {
@@ -53,6 +53,17 @@ class _AuthFormState extends State<AuthForm> {
                 //take the height as much as needed(its children)
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  //adding user picture in login form
+                  CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    radius: 40,
+                  ),
+                  //button to take a photo
+                  TextButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.image),
+                    label: const Text('Add image'),
+                  ),
                   TextFormField(
                     key: const ValueKey('email'),
                     keyboardType: TextInputType.emailAddress,

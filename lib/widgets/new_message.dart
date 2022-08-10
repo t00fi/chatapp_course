@@ -6,7 +6,7 @@ class NewMessage extends StatefulWidget {
   const NewMessage({Key? key}) : super(key: key);
 
   @override
-  _NewMessageState createState() => _NewMessageState();
+  State<NewMessage> createState() => _NewMessageState();
 }
 
 class _NewMessageState extends State<NewMessage> {
@@ -15,16 +15,22 @@ class _NewMessageState extends State<NewMessage> {
   //store entered meesage in var
   var _enteredMessage;
   //method to send a message
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     //adding firebase auth to send our user id.
     //get current user logged in.
     final currentUser = FirebaseAuth.instance.currentUser;
+    //get users info from users collection.
+    final userInfo = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser!.uid)
+        .get();
     FirebaseFirestore.instance.collection('chats').add(
       {
         'text': _enteredMessage,
         //timeStamp class is in cloud_firestore pacckage because it supprot timeStamp better than DateTime in Dart package.
         'sentDate': Timestamp.now(),
-        'userId': currentUser!.uid,
+        'userId': currentUser.uid,
+        'username': userInfo['username'],
       },
     );
     //clear the message controller after sending message.

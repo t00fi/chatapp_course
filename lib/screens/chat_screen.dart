@@ -23,6 +23,7 @@ class ChatScreen extends StatelessWidget {
                 value: 'logout',
                 child: TextButton.icon(
                   onPressed: () async {
+                    Navigator.of(context).pop();
                     await FirebaseAuth.instance.signOut();
                   },
                   icon: const Icon(Icons.logout),
